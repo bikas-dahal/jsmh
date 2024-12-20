@@ -1,24 +1,57 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { MoreHorizontal, PlusCircleIcon } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import React from 'react'
+import prisma from "@/lib/prisma";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { MoreHorizontal, PlusCircle, UserIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { unstable_noStore as noStore } from "next/cache";
 
-const ProductPage = () => {
+async function getData() {
+  const data = await prisma.product.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return data;
+}
+
+export default async function ProductPage() {
+  noStore();
+  const data = await getData();
   return (
     <>
-        <div className='flex items-center justify-end'>
-            <Button className='flex items-center gap-x-2' asChild>
-                <Link href={'/dashboard/products/create'}>
-                    <PlusCircleIcon className='w-5 h-5' />
-                    Add Product
-                </Link>
-            </Button>
-        </div>
-        <Card className="mt-5">
+      <div className="flex items-center justify-end">
+        <Button asChild className="flex items-center gap-x-2">
+          <Link href="/dashboard/products/create">
+            <PlusCircle className="w-3.5 h-3.5" />
+            <span>Add Product</span>
+          </Link>
+        </Button>
+      </div>
+      <Card className="mt-5">
         <CardHeader>
           <CardTitle>Products</CardTitle>
           <CardDescription>
@@ -26,7 +59,20 @@ const ProductPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
+
+          {data.length === 0 ? (
+            <div className="text-sm text-semibold grid place-items-center">
+              No Products found.
+              <br />
+              <Button variant={'outline'} asChild className="text-blue-500 mt-4">
+                <Link href="/dashboard/products/create" className="text-blue-500">
+                  Create one
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            <>
+              <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Image</TableHead>
@@ -38,31 +84,22 @@ const ProductPage = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-            <TableRow >
+              {data.map((item) => (
+                <TableRow key={item.id}>
                   <TableCell>
                     <Image
                       alt="Product Image"
-                      src={'/file.svg'}
+                      src={item.images[0]}
                       height={64}
                       width={64}
                       className="rounded-md object-cover h-16 w-16"
                     />
                   </TableCell>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.status}</TableCell>
+                  <TableCell>${item.price}</TableCell>
                   <TableCell>
-                    {/* {item.name} */}
-                    Product Name
-                  </TableCell>
-                  <TableCell>
-                    {/* {item.status} */}
-                    Active
-                  </TableCell>
-                  <TableCell>
-                    {/* ${new Intl.NumberFormat("en-US").format(item.price / 100)} */}
-                    $100
-                  </TableCell>
-                  <TableCell>
-                    {/* {new Intl.DateTimeFormat("en-US").format(item.createdAt)} */}
-                    2021-09-09
+                    {new Intl.DateTimeFormat("en-US").format(item.createdAt)}
                   </TableCell>
                   <TableCell className="text-end">
                     <DropdownMenu>
@@ -75,12 +112,12 @@ const ProductPage = () => {
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/products/`}>
+                          <Link href={`/dashboard/products/${item.id}`}>
                             Edit
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/products/delete`}>
+                          <Link href={`/dashboard/products/${item.id}/delete`}>
                             Delete
                           </Link>
                         </DropdownMenuItem>
@@ -88,12 +125,15 @@ const ProductPage = () => {
                     </DropdownMenu>
                   </TableCell>
                 </TableRow>
-                </TableBody>
+              ))}
+            </TableBody>
           </Table>
+            </>
+          )}
+
+          
         </CardContent>
       </Card>
     </>
-  )
+  );
 }
-
-export default ProductPage

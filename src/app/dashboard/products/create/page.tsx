@@ -1,34 +1,60 @@
-'use client'
+"use client";
 
-import { createProduct } from '@/actions/create-product'
-import { Button } from '@/components/ui/button'
-import { ChevronLeft } from 'lucide-react'
-import Link from 'next/link'
-import React, { useActionState, useState } from 'react'
-import { useFormState } from 'react-dom'
-import {useForm} from '@conform-to/react'
-import { parseWithZod } from '@conform-to/zod'
-import { productSchema } from '@/schemas/product'
+import { createProduct } from "@/actions/create-product";
+import { UploadDropzone } from "@/lib/uploadthing";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { ChevronLeft, XIcon } from "lucide-react";
+import Link from "next/link";
+import { useFormState } from "react-dom";
+import { useForm } from "@conform-to/react";
+import { parseWithZod } from "@conform-to/zod";
+import { productSchema } from "@/schemas/product";
+import { useActionState, useState } from "react";
 
-const ProductCreatePage = () => {
+import Image from "next/image";
+import { categories } from "@/lib/categories";
+import { SubmitButton } from "@/components/submit-button";
 
-  const [images, setImages] = useState<string[]>([])
-  const [lastResult, action] = useActionState(createProduct, undefined)
-
+export default function ProductCreateRoute() {
+  const [images, setImages] = useState<string[]>([]);
+  const [lastResult, action] = useActionState(createProduct, undefined);
   const [form, fields] = useForm({
     lastResult,
-    onValidate({formData}) {
-      return parseWithZod(formData, {
-        schema: productSchema,
-      })
+
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: productSchema });
     },
-    shouldValidate: 'onBlur',
-    shouldRevalidate: 'onInput',
-  })
+
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onInput",
+  });
+
+  const handleDelete = (index: number) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
 
   return (
-    <form>
-      <div className="flex items-center gap-x-4">
+    <form id={form.id} onSubmit={form.onSubmit} action={action}>
+      <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" asChild>
           <Link href="/dashboard/products">
             <ChevronLeft className="w-4 h-4" />
@@ -154,6 +180,7 @@ const ProductCreatePage = () => {
                       />
 
                       <button
+                        title="Delete Image"
                         onClick={() => handleDelete(index)}
                         type="button"
                         className="absolute -top-3 -right-3 bg-red-500 p-2 rounded-lg text-white"
@@ -184,7 +211,5 @@ const ProductCreatePage = () => {
         </CardFooter>
       </Card>
     </form>
-  )
+  );
 }
-
-export default ProductCreatePage
