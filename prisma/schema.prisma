@@ -50,8 +50,9 @@ model Order {
   id     String @id @default(uuid())
   status String @default("pending")
   amount Int
+  quantity Int?
 
-  User   User?   @relation(fields: [userId], references: [id])
+  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
   createdAt DateTime @default(now())

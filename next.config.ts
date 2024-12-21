@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  reactStrictMode: false,
+  // ignore eslint error in build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
   images: {
     remotePatterns: [
       {

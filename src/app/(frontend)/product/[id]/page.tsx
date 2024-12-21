@@ -1,13 +1,13 @@
-// import { addItem } from "@/app/actions";
-import { ShoppingBagButton } from "@/components/submit-button";
+import { addItemInCart } from "@/actions/add-item-in-cart";
 import { FeaturedProducts } from "@/components/frontend/featured-product";
 import { ImageSlider } from "@/components/frontend/image-slider";
+import { ShoppingBagButton } from "@/components/submit-button";
+import { Input } from "@/components/ui/input";
 import prisma from "@/lib/prisma";
-
 import { StarIcon } from "lucide-react";
+import { unstable_noStore } from "next/cache";
 import { notFound } from "next/navigation";
-import { unstable_noStore as noStore } from "next/cache";
-import { addItemInCart } from "@/actions/add-item-in-cart";
+
 
 async function getData(productId: string) {
   const data = await prisma.product.findUnique({
@@ -30,14 +30,25 @@ async function getData(productId: string) {
   return data;
 }
 
-export default async function ProductIdPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  noStore();
-  const data = await getData(params.id);
-  const addProducttoShoppingCart = addItemInCart.bind(null, data.id);
+// type Props = Promise<{ params: { id: string } }>;
+type Params = Promise<{ id: string }>;
+
+
+export default async function ProductIdPage({params}: {params: Params}) {
+  unstable_noStore();
+
+  const {id} = await params;
+  const data = await getData(id);
+
+  async function addToCart(formData: FormData) {
+    'use server';
+    const quantity = Number(formData.get('quantity'));
+    await addItemInCart(data.id, quantity);
+  }
+
+
+  // const addProducttoShoppingCart = addItemInCart.bind(null, data.id);
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start lg:gap-x-24 py-6">
@@ -56,7 +67,16 @@ export default async function ProductIdPage({
           </div>
           <p className="text-base text-gray-700 mt-6">{data.description}</p>
 
-          <form action={addProducttoShoppingCart}>
+          <form action={addToCart}>
+            <Input
+              type="number"
+              name="quantity"
+              required
+              defaultValue="1"
+              min="1"
+              max="10"
+              className="w-full mt-4"
+            />
             <ShoppingBagButton />
           </form>
         </div>

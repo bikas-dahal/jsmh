@@ -17,12 +17,16 @@ async function getData(productId: string) {
   return data;
 }
 
+type Params = Promise<{ id: string }>;
+
 export default async function EditRoute({
-  params,
-}: {
-  params: { id: string };
-}) {
+  params
+}: {params: Params}) {
+
+
   noStore();
-  const data = await getData(params.id);
+
+  const { id } = (await params);
+  const data = await getData(id);
   return <EditForm data={data} />;
 }

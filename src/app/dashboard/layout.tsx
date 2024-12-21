@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { getKindeServerSession, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
-import { CircleUser, LogOutIcon, MenuIcon, NavigationIcon } from "lucide-react";
+import { CircleUser, LogOutIcon, MenuIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout(

@@ -25,7 +25,7 @@ export async function createProduct(prevState: unknown, formData: FormData) {
 
     const flattenImageUrls = submission.value.images.flatMap((url: string) => (url.split(',').map((url: string) => url.trim())))
 
-    const product = await prisma.product.create({
+    await prisma.product.create({
         data: {
             name: submission.value.name,
             description: submission.value.description,

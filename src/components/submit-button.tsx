@@ -74,3 +74,22 @@ export function DeleteItem() {
         </Button>
     )
 }
+
+export const ChceckoutButton = () => {
+    const { pending } = useFormStatus()
+
+    if (pending) {
+        return (
+            <Button variant="default" disabled size={'lg'} className="w-full mt-4">
+                <Loader2Icon className="h-4 w-4 mr-2" />
+                Processing...
+            </Button>
+        )
+    }
+
+    return (
+        <Button variant="default" type="submit" size={'lg'} className="w-full mt-4">
+            Checkout
+        </Button>
+    )
+}

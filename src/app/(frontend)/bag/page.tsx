@@ -1,5 +1,5 @@
 import { delItem } from "@/actions/delete-item-from-cart";
-import {  DeleteItem } from "@/components/submit-button";
+import {  ChceckoutButton, DeleteItem } from "@/components/submit-button";
 import { Button } from "@/components/ui/button";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { ShoppingBag } from "lucide-react";
@@ -10,6 +10,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { redirect } from "next/navigation";
 import { Cart } from "@/schemas/cart-interface";
 import { redis } from "@/lib/redis";
+import { checkOut } from "@/actions/check-out";
 
 export default async function BagRoute() {
   noStore();
@@ -88,9 +89,9 @@ export default async function BagRoute() {
               <p>Free</p>
             </div>
 
-            {/* <form action={checkOut}>
+            <form action={checkOut}>
               <ChceckoutButton />
-            </form> */}
+            </form>
           </div>
         </div>
       )}

@@ -27,7 +27,6 @@ import Image from "next/image";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { categories } from "@/lib/categories";
 import { useActionState, useState } from "react";
-import { useFormState } from "react-dom";
 import {  editProduct } from "@/actions/edit-product";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
