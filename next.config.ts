@@ -6,7 +6,12 @@ const nextConfig: NextConfig = {
       {
         hostname: 'utfs.io',
         protocol: 'https'
-      }
+      },
+      //googleimage
+      {
+        hostname: 'lh3.googleusercontent.com',
+        protocol: 'https'
+      },
     ]
   }
 };

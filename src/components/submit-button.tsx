@@ -2,6 +2,7 @@
 
 import { useFormStatus } from "react-dom"
 import { Button } from '@/components/ui/button'
+import { Loader2Icon, ShoppingBagIcon } from "lucide-react"
 
 interface ButtonProps {
     text: string
@@ -31,5 +32,45 @@ export const SubmitButton = ({ text, variants }: ButtonProps) => {
 
     return (
         <Button variant={variants} type="submit">{text}</Button>
+    )
+}
+
+export function ShoppingBagButton() {
+    const { pending } = useFormStatus()
+
+    if (pending) {
+        return (
+            <Button variant="default" disabled size={'lg'} className="w-full mt-4">
+                <Loader2Icon className="h-4 w-4 mr-2" />
+                Adding to cart...
+            </Button>
+        )
+    }
+
+    return (
+        <Button variant="default" type="submit" size={'lg'} className="w-full mt-4">
+            <ShoppingBagIcon className="h-4 w-4 mr-2" />
+            Add to Cart
+        </Button>
+    )
+}
+
+
+export function DeleteItem() {
+    const { pending } = useFormStatus()
+
+    if (pending) {
+        return (
+            <Button variant="destructive" disabled>
+                <Loader2Icon className="h-4 w-4 mr-2" />
+                Deleting...
+            </Button>
+        )
+    }
+
+    return (
+        <Button variant="destructive" type="submit">
+            Delete
+        </Button>
     )
 }
