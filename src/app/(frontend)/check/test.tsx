@@ -4,6 +4,16 @@
 // import { Table } from '@/components/ui/table';
 // import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
 
+import React from 'react'
+
+const TestPage = () => {
+  return (
+    <div>TestPage</div>
+  )
+}
+
+export default TestPage
+
 // const StudentProgressDashboard = () => {
 //   const sampleData = {
 //     "Class 6A": {
