@@ -32,8 +32,6 @@ export async function GET() {
   }
 
   return NextResponse.redirect(
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000/"
-      : "https://jsmh-9henx9vf3-bikas-dahals-projects.vercel.app/"
+    `${process.env.NEXT_PUBLIC_URL}`
   );
 }
